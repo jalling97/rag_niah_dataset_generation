@@ -33,8 +33,8 @@ def generate_niah_dataset():
     for length in lengths:
         for depth in depths:
             for ii in range(copies):
-                context = sample_df_for_length(df=essays, length=length)
-                context_point = find_nearest_left_period(context, depth)
+                context = _sample_df_for_length(df=essays, length=length)
+                context_point = _find_nearest_left_period(context, depth)
                 insert_point = context_point if context_point >=0 else 0
                 secret_code = random.choice(WORDS) + str(random.randint(100,999))
                 code_string = f"Doug's secret code is: {secret_code}. Remember this."
@@ -47,9 +47,11 @@ def generate_niah_dataset():
                 counter += 1
         print(f"Added row {counter} out of {total_copies}")
     df.to_json("RAG_niah.json",orient="records", lines=True)
+    print("Dataset exported to JSON")
 
 
-def sample_df_for_length(df, length):
+def _sample_df_for_length(df, length):
+    """Return an aggregated sample of text from a dataframe, then truncate that text until it's approximately equal to length"""
     sample = ''
     while len(sample) < length:
         sample += df['text'].sample(n=1).values[0]
@@ -59,7 +61,8 @@ def sample_df_for_length(df, length):
 
     return sample    
 
-def find_nearest_left_period(text, depth):
+def _find_nearest_left_period(text, depth):
+    """Locate the index of the nearest period punctuation to the left of the requested depth within text"""
     depth_index = int(len(text) * depth)
 
     current_index = depth_index - 1
