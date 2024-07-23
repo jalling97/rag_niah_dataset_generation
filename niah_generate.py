@@ -46,7 +46,7 @@ def generate_niah_dataset():
                 df.loc[counter] = [length, depth, secret_code, ii, new_context]
                 counter += 1
         print(f"Added row {counter} out of {total_copies}")
-    df.to_json("LFAI_RAG_niah_q1.json",orient="records", lines=True)
+    df.to_json("RAG_niah.json",orient="records", lines=True)
 
 
 def sample_df_for_length(df, length):
